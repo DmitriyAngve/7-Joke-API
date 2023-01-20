@@ -3,13 +3,37 @@ const h1 = document.querySelector(".h1");
 const output = document.querySelector(".output");
 const inputVal = document.querySelector(".val");
 const url1 = "https://api.chucknorris.io/jokes/";
-
 btn.textContent = "Click Me";
+
+buildCats();
+
 btn.addEventListener("click", (e) => {
-  console.log("ready");
-  const tempURL = url1 + "random";
-  getJoke(tempURL);
+  //   console.log("ready");
+  const val1 = inputVal.value || "test";
+  const tempURL = url1 + "search?query=" + val1;
+  getJokes(tempURL, val1); // val1 === search Term
 });
+
+function buildCats() {
+  const urlTemp = url1 + "categories";
+  console.log(urlTemp);
+  fetch(urlTemp)
+    .then((rep) => rep.json())
+    .then((data) => console.log(data));
+}
+
+function getJokes(url, searchTerm) {
+  fetch(url)
+    .then((rep) => rep.json())
+    .then((data) => {
+      output.innerHTML = `${searchTerm} found ${data.total}`;
+      console.log(data);
+      data.result.forEach((joke) => {
+        console.log(joke);
+        addJoke(joke.value);
+      });
+    });
+}
 
 function getJoke(url) {
   fetch(url)
@@ -21,5 +45,5 @@ function getJoke(url) {
 }
 
 function addJoke(val) {
-  output.innerHTML += val;
+  output.innerHTML += val + "<br>";
 }
